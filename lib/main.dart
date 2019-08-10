@@ -65,6 +65,7 @@ class _StartUpPageState extends State<StartUpPage> {
   List<ThingsItem> _possessions = <ThingsItem>[];
 
 
+
   final TextStyle _fontSize = const TextStyle(fontSize: 20.0);
 
   bool _emptyThingsList = true;
@@ -80,6 +81,7 @@ class _StartUpPageState extends State<StartUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    _readAll();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -100,13 +102,27 @@ class _StartUpPageState extends State<StartUpPage> {
   }
 
   Widget _buildThingsList(){
-    _possessions = await DatabaseHelper.instance.queryAllThings();
+    FutureBuilder<List<ThingsItem>>(
+      future: DatabaseHelper.instance.queryAllThings(),
+      builder: (BuildContext context, AsyncSnapshot<List<ThingsItem>> snapshot){
+        if(snapshot.hasData) {
+          snapshot.data.forEach((element) => print(element));
+          _possessions.addAll(snapshot.data);
+          _possessions.forEach((element) => print(element));
+        }
+        return null;
+      },
+    );
     if (_possessions.isEmpty && _emptyThingsList){
       ThingsItem T = new ThingsItem();
       T.id = -1;
       T.name = 'Your list is empty! Try adding something.';
       T.value = 0;
+      print("Pre add:");
+      _possessions.forEach((element) => print(element));
       _possessions.add(T);
+      print("post add:");
+      _possessions.forEach((element) => print(element));
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
@@ -222,8 +238,6 @@ class _StartUpPageState extends State<StartUpPage> {
         }
     );
 
-
-
   }
   _read() async {
     DatabaseHelper helper = DatabaseHelper.instance;
@@ -234,11 +248,25 @@ class _StartUpPageState extends State<StartUpPage> {
     } else {
       print('read row $rowId: ${thing.name} ${thing.value}');
     }
+
   }
   _save(ThingsItem thing) async {
     DatabaseHelper helper = DatabaseHelper.instance;
     int id = await helper.insert(thing);
     print('inserted row: $id');
+  }
+  _readAll() async{
+    DatabaseHelper helper = DatabaseHelper.instance;
+    List<ThingsItem> tList = await helper.queryAllThings();
+    if (tList == null){
+      print('read list returned null');
+    }
+    else if (tList.isEmpty){
+      print('read list is empty');
+    }else{
+      tList.forEach((element) => print(element));
+    }
+    _possessions = tList;
   }
 
 

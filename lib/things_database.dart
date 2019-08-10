@@ -13,14 +13,14 @@ class ThingsItem
 {
   int id;
   String name;
-  double value;
+  var value;
   ThingsItem();
 
   //convenience constructor to create a ThingsItem object
   ThingsItem.fromMap(Map<String, dynamic> map){
     id = map[columnId];
     name = map[columnName];
-    value = map[columnValue].toDouble();
+    value = map[columnValue];
   }
   //convenience method to create a Map from this object
   Map<String, dynamic> toMap() {
@@ -32,6 +32,11 @@ class ThingsItem
       map[columnId] = id;
     }
     return map;
+  }
+
+  @override
+  toString(){
+    return id.toString() + name + value.toString();
   }
 }
 
@@ -68,7 +73,7 @@ class DatabaseHelper
       CREATE TABLE $tableThings (
         $columnId INTEGER PRIMARY KEY,
         $columnName TEXT NOT NULL,
-        $columnValue FLOAT NOT NULL
+        $columnValue REAL NOT NULL
       )
     ''');
   }
@@ -92,11 +97,16 @@ class DatabaseHelper
     return null;
   }
 
-  Future<List> queryAllThings() async{
+  Future<List<ThingsItem>> queryAllThings() async{
     Database db = await database;
-    var result = db.rawQuery('SELECT * FROM $tableThings');
-
-    return result;
+    List<Map<String, dynamic>> maps = await db.query(tableThings, columns: [columnId, columnName, columnName]);
+    List<ThingsItem> list = <ThingsItem>[];
+    try {
+      maps.forEach((element) => list.add(ThingsItem.fromMap(element)));
+    } catch (e) {
+      print(e);
+    }
+    return list;
   }
 
 // TODO: queryAllWords()
