@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sql.dart';
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart';
+import 'package:things_app/things_database.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,12 +49,21 @@ class StartUpPage extends StatefulWidget {
 
 class _StartUpPageState extends State<StartUpPage> {
   final _formKey = GlobalKey<FormState>();
-  //final Future<Database> thingsDatabase = openDatabase(  );
+  final Future<Database> thingsDatabase = openDatabase(
+    p.join(getDatabasesPath().toString(), 'things_database.db'),
+    onCreate: (db, version){
+      return db.execute(
+        "CREATE TABLE things(id INTEGER PRIMARY KEY, name TEXT, value REAL)",
+      );
+    },
+    version: 1,
+  );
 
   final addItemNameController = TextEditingController();//Used to retrieve user data from text fields
   final addItemValueController = TextEditingController();
 
-  final List<ThingsItem> _possessions = <ThingsItem>[];
+  List<ThingsItem> _possessions = <ThingsItem>[];
+
 
   final TextStyle _fontSize = const TextStyle(fontSize: 20.0);
 
@@ -63,6 +74,10 @@ class _StartUpPageState extends State<StartUpPage> {
     addItemValueController.dispose();
     super.dispose();
   }
+  //database
+
+
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -85,8 +100,13 @@ class _StartUpPageState extends State<StartUpPage> {
   }
 
   Widget _buildThingsList(){
+    _possessions = await DatabaseHelper.instance.queryAllThings();
     if (_possessions.isEmpty && _emptyThingsList){
-      _possessions.add(ThingsItem('Your list is empty! Try adding something.', 0));
+      ThingsItem T = new ThingsItem();
+      T.id = -1;
+      T.name = 'Your list is empty! Try adding something.';
+      T.value = 0;
+      _possessions.add(T);
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
@@ -103,7 +123,7 @@ class _StartUpPageState extends State<StartUpPage> {
   Widget _buildRow(ThingsItem thing){
     return ListTile(
       title: Text(
-        thing._name,
+        thing.name,
         style: _fontSize,
       )
     );
@@ -148,15 +168,27 @@ class _StartUpPageState extends State<StartUpPage> {
             child: RaisedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()){
-
+                    _read();
                     if (_emptyThingsList)
                       {
                         _possessions.clear();
-                        _possessions.add(new ThingsItem(addItemNameController.text, double.parse(addItemValueController.text)));
+                        ThingsItem T = new ThingsItem();
+                        T.id = _possessions.length;
+                        T.name = addItemNameController.text;
+                        T.value = double.parse(addItemValueController.text);
+                        _possessions.add(T);
+                        _save(T);
+                        _read();
                         _emptyThingsList = false;
                       }
                     else {
-                      _possessions.add(new ThingsItem(addItemNameController.text, double.parse(addItemValueController.text)));
+                      ThingsItem T = new ThingsItem();
+                      T.id = _possessions.length;
+                      T.name = addItemNameController.text;
+                      T.value = double.parse(addItemValueController.text);
+                      _possessions.add(T);
+                      _save(T);
+                      _read();
                     }
                     setState(() {
 
@@ -193,17 +225,24 @@ class _StartUpPageState extends State<StartUpPage> {
 
 
   }
+  _read() async {
+    DatabaseHelper helper = DatabaseHelper.instance;
+    int rowId = 1;
+    ThingsItem thing = await helper.queryThing(rowId);
+    if (thing == null) {
+      print('read row $rowId: empty');
+    } else {
+      print('read row $rowId: ${thing.name} ${thing.value}');
+    }
+  }
+  _save(ThingsItem thing) async {
+    DatabaseHelper helper = DatabaseHelper.instance;
+    int id = await helper.insert(thing);
+    print('inserted row: $id');
+  }
 
 
 
 
 }
-class ThingsItem
-{
-  int _id;
-  String _name;
-  double _value;
 
-  ThingsItem(this._name, this._value);
-
-}
