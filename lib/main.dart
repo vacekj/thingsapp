@@ -107,12 +107,14 @@ class _StartUpPageState extends State<StartUpPage> {
       builder: (BuildContext context, AsyncSnapshot<List<ThingsItem>> snapshot){
         if(snapshot.hasData) {
           snapshot.data.forEach((element) => print(element));
-          _possessions.addAll(snapshot.data);
           _possessions.forEach((element) => print(element));
         }
         return null;
       },
     );
+    setState(() {
+
+    });
     if (_possessions.isEmpty && _emptyThingsList){
       ThingsItem T = new ThingsItem();
       T.id = -1;
@@ -141,7 +143,8 @@ class _StartUpPageState extends State<StartUpPage> {
       title: Text(
         thing.name,
         style: _fontSize,
-      )
+      ),
+      trailing: Icon(Icons.navigate_next),
     );
   }
 
@@ -150,7 +153,7 @@ class _StartUpPageState extends State<StartUpPage> {
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[//TODO create a thing, add to list, save to database
+        children: <Widget>[//TODO deleting from list and database
           //Name
           new ListTile(
             title: new Text('Name'),
@@ -184,11 +187,13 @@ class _StartUpPageState extends State<StartUpPage> {
             child: RaisedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()){
-                    _read();
-                    if (_emptyThingsList)
+                    //_read();
+                    if (_emptyThingsList && _possessions.length==1)
                       {
                         _possessions.clear();
                         ThingsItem T = new ThingsItem();
+                        print('Adding new thing to possessions; printing possessions length');
+                        print(_possessions.length);
                         T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
@@ -199,6 +204,8 @@ class _StartUpPageState extends State<StartUpPage> {
                       }
                     else {
                       ThingsItem T = new ThingsItem();
+                      print('Adding new thing to possessions; printing possessions length');
+                      print(_possessions.length);
                       T.id = _possessions.length;
                       T.name = addItemNameController.text;
                       T.value = double.parse(addItemValueController.text);
