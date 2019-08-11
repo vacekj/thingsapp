@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as p;
-import 'package:sqflite/sqflite.dart';
 import 'package:things_app/things_database.dart';
 
 void main() => runApp(MyApp());
@@ -49,15 +47,6 @@ class StartUpPage extends StatefulWidget {
 
 class _StartUpPageState extends State<StartUpPage> {
   final _formKey = GlobalKey<FormState>();
-  final Future<Database> thingsDatabase = openDatabase(
-    p.join(getDatabasesPath().toString(), 'things_database.db'),
-    onCreate: (db, version) {
-      return db.execute(
-        "CREATE TABLE things(id INTEGER PRIMARY KEY, name TEXT, value REAL)",
-      );
-    },
-    version: 1,
-  );
 
   final addItemNameController =
       TextEditingController(); //Used to retrieve user data from text fields
@@ -156,66 +145,81 @@ class _StartUpPageState extends State<StartUpPage> {
         children: <Widget>[
           //TODO deleting from list and database
           //Name
-          new ListTile(
-            title: new Text('Name'),
-            onTap: () => {},
-          ),
-          TextFormField(
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter a name';
-              }
-              return null;
-            },
-            controller: addItemNameController,
-          ),
-          //Value
-          new ListTile(
-            title: new Text('Value'),
-            onTap: () => {},
-          ),
-          TextFormField(
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter a value';
-              }
-              return null;
-            },
-            controller: addItemValueController,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: new ListTile(
+              title: new Text('Name'),
+              onTap: () => {},
+            ),
           ),
           Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    //_read();
-                    if (_emptyThingsList && _possessions.length == 1) {
-                      _possessions.clear();
-                      ThingsItem T = new ThingsItem();
-                      print(
-                          'Adding new thing to possessions; printing possessions length');
-                      print(_possessions.length);
-                      T.id = _possessions.length;
-                      T.name = addItemNameController.text;
-                      T.value = double.parse(addItemValueController.text);
-                      _possessions.add(T);
-                      _save(T);
-                      _emptyThingsList = false;
-                    } else {
-                      ThingsItem T = new ThingsItem();
-                      print(
-                          'Adding new thing to possessions; printing possessions length');
-                      print(_possessions.length);
-                      T.id = _possessions.length;
-                      T.name = addItemNameController.text;
-                      T.value = double.parse(addItemValueController.text);
-                      _possessions.add(T);
-                      _save(T);
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter a name';
+                }
+                return null;
+              },
+              controller: addItemNameController,
+            ),
+          ),
+          //Value
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: new ListTile(
+              title: new Text('Value'),
+              onTap: () => {},
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter a value';
+                }
+                return null;
+              },
+              controller: addItemValueController,
+            ),
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Center(
+                child: RaisedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      //_read();
+                      if (_emptyThingsList && _possessions.length == 1) {
+                        _possessions.clear();
+                        ThingsItem T = new ThingsItem();
+                        print(
+                            'Adding new thing to possessions; printing possessions length');
+                        print(_possessions.length);
+                        T.id = _possessions.length;
+                        T.name = addItemNameController.text;
+                        T.value = double.parse(addItemValueController.text);
+                        _possessions.add(T);
+                        _save(T);
+                        _emptyThingsList = false;
+                      } else {
+                        ThingsItem T = new ThingsItem();
+                        print(
+                            'Adding new thing to possessions; printing possessions length');
+                        print(_possessions.length);
+                        T.id = _possessions.length;
+                        T.name = addItemNameController.text;
+                        T.value = double.parse(addItemValueController.text);
+                        _possessions.add(T);
+                        _save(T);
+                      }
+                      setState(() {});
                     }
-                    setState(() {});
-                  }
-                },
-                child: new Text('Add'),
+                  },
+                  child: new Text('Add'),
+
+                ),
               ))
         ],
       ),
