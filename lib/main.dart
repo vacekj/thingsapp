@@ -76,12 +76,15 @@ class _StartUpPageState extends State<StartUpPage> {
     super.dispose();
   }
   //database
-
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _readAll();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _readAll();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -112,9 +115,6 @@ class _StartUpPageState extends State<StartUpPage> {
         return null;
       },
     );
-    setState(() {
-
-    });
     if (_possessions.isEmpty && _emptyThingsList){
       ThingsItem T = new ThingsItem();
       T.id = -1;
@@ -199,7 +199,6 @@ class _StartUpPageState extends State<StartUpPage> {
                         T.value = double.parse(addItemValueController.text);
                         _possessions.add(T);
                         _save(T);
-                        _read();
                         _emptyThingsList = false;
                       }
                     else {
@@ -211,7 +210,6 @@ class _StartUpPageState extends State<StartUpPage> {
                       T.value = double.parse(addItemValueController.text);
                       _possessions.add(T);
                       _save(T);
-                      _read();
                     }
                     setState(() {
 
