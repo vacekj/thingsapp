@@ -51,7 +51,7 @@ class _StartUpPageState extends State<StartUpPage> {
   final _formKey = GlobalKey<FormState>();
   final Future<Database> thingsDatabase = openDatabase(
     p.join(getDatabasesPath().toString(), 'things_database.db'),
-    onCreate: (db, version){
+    onCreate: (db, version) {
       return db.execute(
         "CREATE TABLE things(id INTEGER PRIMARY KEY, name TEXT, value REAL)",
       );
@@ -59,22 +59,23 @@ class _StartUpPageState extends State<StartUpPage> {
     version: 1,
   );
 
-  final addItemNameController = TextEditingController();//Used to retrieve user data from text fields
+  final addItemNameController =
+      TextEditingController(); //Used to retrieve user data from text fields
   final addItemValueController = TextEditingController();
 
   List<ThingsItem> _possessions = <ThingsItem>[];
 
-
-
   final TextStyle _fontSize = const TextStyle(fontSize: 20.0);
 
   bool _emptyThingsList = true;
+
   @override
-  void dispose(){
+  void dispose() {
     addItemNameController.dispose();
     addItemValueController.dispose();
     super.dispose();
   }
+
   //database
   @override
   void initState() {
@@ -104,18 +105,19 @@ class _StartUpPageState extends State<StartUpPage> {
     );
   }
 
-  Widget _buildThingsList(){
+  Widget _buildThingsList() {
     FutureBuilder<List<ThingsItem>>(
       future: DatabaseHelper.instance.queryAllThings(),
-      builder: (BuildContext context, AsyncSnapshot<List<ThingsItem>> snapshot){
-        if(snapshot.hasData) {
+      builder:
+          (BuildContext context, AsyncSnapshot<List<ThingsItem>> snapshot) {
+        if (snapshot.hasData) {
           snapshot.data.forEach((element) => print(element));
           _possessions.forEach((element) => print(element));
         }
         return null;
       },
     );
-    if (_possessions.isEmpty && _emptyThingsList){
+    if (_possessions.isEmpty && _emptyThingsList) {
       ThingsItem T = new ThingsItem();
       T.id = -1;
       T.name = 'Your list is empty! Try adding something.';
@@ -127,18 +129,16 @@ class _StartUpPageState extends State<StartUpPage> {
       _possessions.forEach((element) => print(element));
     }
     return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: _possessions.length*2 -1,
-      itemBuilder: (context, index){
-        if(index.isOdd) return Divider();
+        padding: const EdgeInsets.all(16.0),
+        itemCount: _possessions.length * 2 - 1,
+        itemBuilder: (context, index) {
+          if (index.isOdd) return Divider();
 
-        return _buildRow(_possessions[(index+1)~/2]);
-
-      }
-    );
+          return _buildRow(_possessions[(index + 1) ~/ 2]);
+        });
   }
 
-  Widget _buildRow(ThingsItem thing){
+  Widget _buildRow(ThingsItem thing) {
     return ListTile(
       title: Text(
         thing.name,
@@ -148,20 +148,21 @@ class _StartUpPageState extends State<StartUpPage> {
     );
   }
 
-  Widget _buildForm(){
+  Widget _buildForm() {
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[//TODO deleting from list and database
+        children: <Widget>[
+          //TODO deleting from list and database
           //Name
           new ListTile(
             title: new Text('Name'),
             onTap: () => {},
           ),
           TextFormField(
-            validator: (value){
-              if (value.isEmpty){
+            validator: (value) {
+              if (value.isEmpty) {
                 return 'Please enter a name';
               }
               return null;
@@ -175,7 +176,7 @@ class _StartUpPageState extends State<StartUpPage> {
           ),
           TextFormField(
             validator: (value) {
-              if (value.isEmpty){
+              if (value.isEmpty) {
                 return 'Please enter a value';
               }
               return null;
@@ -183,27 +184,27 @@ class _StartUpPageState extends State<StartUpPage> {
             controller: addItemValueController,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: RaisedButton(
                 onPressed: () {
-                  if (_formKey.currentState.validate()){
+                  if (_formKey.currentState.validate()) {
                     //_read();
-                    if (_emptyThingsList && _possessions.length==1)
-                      {
-                        _possessions.clear();
-                        ThingsItem T = new ThingsItem();
-                        print('Adding new thing to possessions; printing possessions length');
-                        print(_possessions.length);
-                        T.id = _possessions.length;
-                        T.name = addItemNameController.text;
-                        T.value = double.parse(addItemValueController.text);
-                        _possessions.add(T);
-                        _save(T);
-                        _emptyThingsList = false;
-                      }
-                    else {
+                    if (_emptyThingsList && _possessions.length == 1) {
+                      _possessions.clear();
                       ThingsItem T = new ThingsItem();
-                      print('Adding new thing to possessions; printing possessions length');
+                      print(
+                          'Adding new thing to possessions; printing possessions length');
+                      print(_possessions.length);
+                      T.id = _possessions.length;
+                      T.name = addItemNameController.text;
+                      T.value = double.parse(addItemValueController.text);
+                      _possessions.add(T);
+                      _save(T);
+                      _emptyThingsList = false;
+                    } else {
+                      ThingsItem T = new ThingsItem();
+                      print(
+                          'Adding new thing to possessions; printing possessions length');
                       print(_possessions.length);
                       T.id = _possessions.length;
                       T.name = addItemNameController.text;
@@ -211,39 +212,40 @@ class _StartUpPageState extends State<StartUpPage> {
                       _possessions.add(T);
                       _save(T);
                     }
-                    setState(() {
-
-                    });
+                    setState(() {});
                   }
                 },
-              child: new Text('Add'),
-            )
-          )
+                child: new Text('Add'),
+              ))
         ],
       ),
     );
   }
 
-  void _pushAddThings(){
+  void _pushAddThings() {
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext bc){
+        builder: (BuildContext bc) {
           return Container(
             child: new Wrap(
               children: <Widget>[
                 new ListTile(
-                    title: new Text('Add a thing', style: new TextStyle(fontSize: 30.0)),
-                  trailing: new IconButton(icon: new Icon(Icons.close), onPressed: (){Navigator.pop(context);} ),
+                  title: new Text('Add a thing',
+                      style: new TextStyle(fontSize: 30.0)),
+                  trailing: new IconButton(
+                      icon: new Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
                 ),
                 new Divider(),
                 _buildForm(),
               ],
             ),
           );
-        }
-    );
-
+        });
   }
+
   _read() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     int rowId = 1;
@@ -253,29 +255,25 @@ class _StartUpPageState extends State<StartUpPage> {
     } else {
       print('read row $rowId: ${thing.name} ${thing.value}');
     }
-
   }
+
   _save(ThingsItem thing) async {
     DatabaseHelper helper = DatabaseHelper.instance;
     int id = await helper.insert(thing);
     print('inserted row: $id');
   }
-  _readAll() async{
+
+  _readAll() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     List<ThingsItem> tList = await helper.queryAllThings();
-    if (tList == null){
+    if (tList == null) {
       print('read list returned null');
-    }
-    else if (tList.isEmpty){
+    } else if (tList.isEmpty) {
       print('read list is empty');
-    }else{
+    } else {
       tList.forEach((element) => print(element));
     }
     _possessions = tList;
+    setState(() {});
   }
-
-
-
-
 }
-
