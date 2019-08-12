@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:things_app/things_database.dart';
+import 'package:things_app/things_infoScreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -87,7 +88,7 @@ class _StartUpPageState extends State<StartUpPage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.add), onPressed: _pushAddThings)
+          IconButton(icon: Icon(Icons.add), onPressed: _pushThingsAdd)
         ],
       ),
       body: _buildThingsList(),
@@ -95,17 +96,6 @@ class _StartUpPageState extends State<StartUpPage> {
   }
 
   Widget _buildThingsList() {
-    FutureBuilder<List<ThingsItem>>(
-      future: DatabaseHelper.instance.queryAllThings(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<ThingsItem>> snapshot) {
-        if (snapshot.hasData) {
-          snapshot.data.forEach((element) => print(element));
-          _possessions.forEach((element) => print(element));
-        }
-        return null;
-      },
-    );
     if (_possessions.isEmpty && _emptyThingsList) {
       ThingsItem T = new ThingsItem();
       T.id = -1;
@@ -129,12 +119,15 @@ class _StartUpPageState extends State<StartUpPage> {
 
   Widget _buildRow(ThingsItem thing) {
     return ListTile(
-      title: Text(
-        thing.name,
-        style: _fontSize,
-      ),
-      trailing: Icon(Icons.navigate_next),
-    );
+        title: Text(
+          thing.name,
+          style: _fontSize,
+        ),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => InfoScreen(thing: thing)));
+          //onTap: ,
+        });
   }
 
   Widget _buildForm() {
@@ -149,7 +142,6 @@ class _StartUpPageState extends State<StartUpPage> {
             padding: const EdgeInsets.symmetric(horizontal: 3.0),
             child: new ListTile(
               title: new Text('Name'),
-              onTap: () => {},
             ),
           ),
           Padding(
@@ -169,7 +161,6 @@ class _StartUpPageState extends State<StartUpPage> {
             padding: const EdgeInsets.symmetric(horizontal: 3.0),
             child: new ListTile(
               title: new Text('Value'),
-              onTap: () => {},
             ),
           ),
           Padding(
@@ -218,7 +209,6 @@ class _StartUpPageState extends State<StartUpPage> {
                     }
                   },
                   child: new Text('Add'),
-
                 ),
               ))
         ],
@@ -226,7 +216,7 @@ class _StartUpPageState extends State<StartUpPage> {
     );
   }
 
-  void _pushAddThings() {
+  void _pushThingsAdd() {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
