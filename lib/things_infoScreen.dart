@@ -18,7 +18,11 @@ class InfoScreen extends StatelessWidget {
       )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: _placeholder,
+        onPressed: () {
+          _deleteThing(thing);
+          Navigator.pop(context);
+          //
+        },
         child: Icon(Icons.delete_outline),
       ),
       bottomNavigationBar: _buildBottomRowButtons(),
@@ -92,5 +96,11 @@ Widget _buildBottomRowButtons() {
 
 //TODO make an edit page
 void _pushThingsEdit() {}
+
+_deleteThing(ThingsItem T) {
+  DatabaseHelper helper = DatabaseHelper.instance;
+  helper.delete(T);
+}
+
 //placeholder function for non implemented buttons
 void _placeholder() {}

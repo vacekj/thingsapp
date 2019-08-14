@@ -9,9 +9,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'THINGS',
+      title: 'DClutter',
       theme: ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: Color(0xFF253336),
+        primaryTextTheme: TextTheme(title: TextStyle(color: Color(0xFFC2DFE3))),
+
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blueGrey,
       ),
-      home: StartUpPage(title: 'THINGS'),
+      home: StartUpPage(title: 'DClutter'),
     );
   }
 }
@@ -84,9 +86,13 @@ class _StartUpPageState extends State<StartUpPage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        leading:
+            IconButton(icon: Icon(Icons.settings), onPressed: _placeholder),
         // Here we take the value from the StartUpPage object that was created by
         // the App.build method, and use it to set our appbar title.
+        iconTheme: IconThemeData(color: Color(0xFFC2DFE3)),
         title: Text(widget.title),
+        centerTitle: true,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: _pushThingsAdd)
         ],
@@ -191,9 +197,10 @@ class _StartUpPageState extends State<StartUpPage> {
                         T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
-                        _possessions.add(T);
+                        //_possessions.add(T);
                         _save(T);
                         _emptyThingsList = false;
+                        _readAll();
                       } else {
                         ThingsItem T = new ThingsItem();
                         print(
@@ -202,8 +209,9 @@ class _StartUpPageState extends State<StartUpPage> {
                         T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
-                        _possessions.add(T);
+                        //_possessions.add(T);
                         _save(T);
+                        _readAll();
                       }
                       setState(() {});
                     }
@@ -270,4 +278,6 @@ class _StartUpPageState extends State<StartUpPage> {
     _possessions = tList;
     setState(() {});
   }
+
+  _placeholder() {}
 }
