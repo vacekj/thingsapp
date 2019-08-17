@@ -60,6 +60,7 @@ class _StartUpPageState extends State<StartUpPage> {
   final TextStyle _fontSize = const TextStyle(fontSize: 20.0);
 
   bool _emptyThingsList = true;
+  int _selectedIndex = 0;
 
   @override
   void dispose() {
@@ -97,6 +98,7 @@ class _StartUpPageState extends State<StartUpPage> {
           IconButton(icon: Icon(Icons.add), onPressed: _pushThingsAdd)
         ],
       ),
+      bottomNavigationBar: _bottomBar(),
       body: _buildThingsList(),
     );
   }
@@ -245,6 +247,18 @@ class _StartUpPageState extends State<StartUpPage> {
             ),
           );
         });
+  }
+
+  Widget _bottomBar() {
+    return BottomNavigationBar(
+      currentIndex: 1,
+      items: [
+        BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard), title: Text("Dashboard")),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.format_list_bulleted), title: Text("List")),
+      ],
+    );
   }
 
   _navigateToInfoPage(BuildContext context, ThingsItem thing) async {
