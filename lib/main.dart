@@ -130,8 +130,7 @@ class _StartUpPageState extends State<StartUpPage> {
           style: _fontSize,
         ),
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => InfoScreen(thing: thing)));
+          _navigateToInfoPage(context, thing);
           //onTap: ,
         });
   }
@@ -246,6 +245,16 @@ class _StartUpPageState extends State<StartUpPage> {
             ),
           );
         });
+  }
+
+  _navigateToInfoPage(BuildContext context, ThingsItem thing) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => InfoScreen(thing: thing)),
+    );
+    if (result == "Deleted") {
+      _readAll();
+    }
   }
 
   _read() async {

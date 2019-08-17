@@ -19,9 +19,8 @@ class InfoScreen extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _deleteThing(thing);
-          Navigator.pop(context);
-          //
+          _showDeleteDialog(context, thing);
+
         },
         child: Icon(Icons.delete_outline),
       ),
@@ -100,6 +99,40 @@ void _pushThingsEdit() {}
 _deleteThing(ThingsItem T) {
   DatabaseHelper helper = DatabaseHelper.instance;
   helper.delete(T);
+}
+
+_showDeleteDialog(BuildContext context, ThingsItem thing) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          //title: Text("Confirmation"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          //titlePadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+          content: Text(
+            "Are you sure you want to delete " + thing.name + "?",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.red),
+          ),
+          actions: <Widget>[
+            FlatButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+            FlatButton(
+              child: Text("Delete"),
+              onPressed: () {
+                _deleteThing(thing);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop("Deleted");
+              },
+            ),
+          ],
+        );
+      });
 }
 
 //placeholder function for non implemented buttons
