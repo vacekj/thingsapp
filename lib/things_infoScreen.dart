@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:things_app/things_database.dart';
+import 'package:things_app/things_editScreen.dart';
 
 class InfoScreen extends StatelessWidget {
-  final TextStyle _textStyle = const TextStyle(fontSize: 20.0);
+  final TextStyle textStyle = const TextStyle(fontSize: 20.0);
 
   final ThingsItem thing;
 
@@ -14,7 +15,7 @@ class InfoScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
           child: Column(
-        children: [_buildTopRowButtons(context), _buildThingsInfoHeader()],
+        children: [buildTopRowButtons(context), buildThingsInfoHeader()],
       )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
@@ -28,13 +29,13 @@ class InfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopRowButtons(BuildContext context) {
+  Widget buildTopRowButtons(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          IconButton(icon: Icon(Icons.edit), onPressed: _pushThingsEdit),
+          IconButton(icon: Icon(Icons.edit), onPressed: (){_pushThingsEdit(context, thing);}),
           //TODO make a working edit page transition
           IconButton(
               icon: Icon(Icons.close),
@@ -46,7 +47,7 @@ class InfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildThingsInfoHeader() {
+  Widget buildThingsInfoHeader() {
     return Container(
         padding: const EdgeInsets.all(32),
         child: Row(
@@ -66,7 +67,7 @@ class InfoScreen extends StatelessWidget {
                   ),
                   Text(
                     thing.value.toString(),
-                    style: _textStyle,
+                    style: textStyle,
                   )
                 ],
               ),
@@ -94,7 +95,12 @@ Widget _buildBottomRowButtons() {
 }
 
 //TODO make an edit page
-void _pushThingsEdit() {}
+_pushThingsEdit(BuildContext context, ThingsItem thing) async{
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => EditScreen(thing: thing)),
+  );
+}
 
 _deleteThing(ThingsItem T) {
   DatabaseHelper helper = DatabaseHelper.instance;

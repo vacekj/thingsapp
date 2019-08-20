@@ -143,17 +143,11 @@ class _StartUpPageState extends State<StartUpPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          //TODO deleting from list and database
-          //Name
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: new ListTile(
-              title: new Text('Name'),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: TextFormField(
+              decoration: const InputDecoration(
+                  hintText: 'Please enter a name', labelText: 'Name'),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter a name';
@@ -165,14 +159,12 @@ class _StartUpPageState extends State<StartUpPage> {
           ),
           //Value
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: new ListTile(
-              title: new Text('Value'),
-            ),
-          ),
-          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: TextFormField(
+              decoration: const InputDecoration(
+                hintText: 'Please enter an estimated value',
+                labelText: 'Value',
+              ),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter a value';
@@ -214,6 +206,7 @@ class _StartUpPageState extends State<StartUpPage> {
                         _save(T);
                         _readAll();
                       }
+                      Navigator.of(context).pop();
                       setState(() {});
                     }
                   },
