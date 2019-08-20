@@ -98,7 +98,7 @@ Widget _buildBottomRowButtons() {
 _pushThingsEdit(BuildContext context, ThingsItem thing) async{
   final result = await Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => EditScreen(thing: thing)),
+    EditPageRoute(builder: (context) => EditScreen(thing: thing)),
   );
 }
 

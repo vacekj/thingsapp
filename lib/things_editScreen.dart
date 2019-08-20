@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 
-class EditScreen extends InfoScreen{
+class EditScreen extends InfoScreen {
   final _formKey = GlobalKey<FormState>();
 
-  EditScreen({Key key, @required ThingsItem thing}):super(key:key, thing: thing);
+  EditScreen({Key key, @required ThingsItem thing})
+      : super(key: key, thing: thing);
 
   @override
   Widget buildTopRowButtons(BuildContext context) {
@@ -24,12 +25,13 @@ class EditScreen extends InfoScreen{
       ),
     );
   }
+
   @override
   Widget buildThingsInfoHeader() {
     return Container(
       padding: const EdgeInsets.all(32),
       child: Form(
-        key: _formKey,
+          key: _formKey,
           child: Row(
             //TODO fix being unable to get a thing.value from database
             children: <Widget>[
@@ -56,5 +58,23 @@ class EditScreen extends InfoScreen{
           )),
     );
   }
+}
 
+class EditPageRoute<T> extends MaterialPageRoute<T> {
+  EditPageRoute({
+    @required WidgetBuilder builder,
+    RouteSettings setting,
+    bool maintainState = true,
+    bool fullscreenDialog = false,
+  }) : super(
+            builder: builder,
+            maintainState: maintainState,
+            settings: setting,
+            fullscreenDialog: fullscreenDialog);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return child;
+  }
 }
