@@ -2,13 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 
-class EditScreen extends InfoScreen {
-  final _formKey = GlobalKey<FormState>();
+class EditScreen extends StatefulWidget {
+  final ThingsItem thing;
 
-  EditScreen({Key key, @required ThingsItem thing})
-      : super(key: key, thing: thing);
+  EditScreen({Key key, @required this.thing}) : super(key: key);
 
   @override
+  EditScreenState createState() => EditScreenState();
+}
+
+class EditScreenState extends State<EditScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  final editItemNameController = TextEditingController();
+  final editItemValueController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement safe area, image etc.
+    return Scaffold(
+      body: SafeArea(
+          child: Column(
+        children: [buildTopRowButtons(context), buildThingsInfoHeader()],
+      )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDeleteDialog(context, widget.thing);
+        },
+        child: Icon(Icons.delete_outline),
+      ),
+      bottomNavigationBar: _buildBottomRowButtons(),
+    );
+  }
+
   Widget buildTopRowButtons(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
@@ -26,8 +53,9 @@ class EditScreen extends InfoScreen {
     );
   }
 
-  @override
   Widget buildThingsInfoHeader() {
+    editItemNameController.text = widget.thing.name;
+    editItemValueController.text = widget.thing.value.toString();
     return Container(
       padding: const EdgeInsets.all(32),
       child: Form(
@@ -42,14 +70,34 @@ class EditScreen extends InfoScreen {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(thing.name,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      child: TextFormField(
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter a name';
+                          }
+                          return null;
+                        },
+                        controller: editItemNameController,
+                      ),
                     ),
-                    Text(
-                      thing.value.toString(),
-                      style: textStyle,
+                    Container(
+                      child: TextFormField(
+                        textAlign: TextAlign.center,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter an estimated value';
+                          }
+                          return null;
+                        },
+                        controller: editItemValueController,
+                      ),
                     )
                   ],
                 ),
@@ -59,6 +107,25 @@ class EditScreen extends InfoScreen {
     );
   }
 }
+
+Widget _buildBottomRowButtons() {
+  return BottomAppBar(
+    shape: CircularNotchedRectangle(),
+    notchMargin: 4.0,
+    child: Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        RaisedButton(
+          onPressed: _placeholder,
+          child: Text('Save changes'),
+        ),
+      ],
+    ),
+  );
+}
+
+_placeholder() {}
 
 class EditPageRoute<T> extends MaterialPageRoute<T> {
   EditPageRoute({

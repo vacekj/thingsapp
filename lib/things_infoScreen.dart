@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_editScreen.dart';
 
-class InfoScreen extends StatelessWidget {
+class InfoScreenState extends State<InfoScreen>{
   final TextStyle textStyle = const TextStyle(fontSize: 20.0);
 
-  final ThingsItem thing;
-
-  InfoScreen({Key key, @required this.thing}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +17,12 @@ class InfoScreen extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showDeleteDialog(context, thing);
+          showDeleteDialog(context, widget.thing);
 
         },
         child: Icon(Icons.delete_outline),
       ),
-      bottomNavigationBar: _buildBottomRowButtons(),
+      bottomNavigationBar: buildBottomRowButtons(),
     );
   }
 
@@ -35,7 +32,7 @@ class InfoScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          IconButton(icon: Icon(Icons.edit), onPressed: (){_pushThingsEdit(context, thing);}),
+          IconButton(icon: Icon(Icons.edit), onPressed: (){_pushThingsEdit(context, widget.thing);}),
           //TODO make a working edit page transition
           IconButton(
               icon: Icon(Icons.close),
@@ -61,12 +58,12 @@ class InfoScreen extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.only(bottom: 8),
-                    child: Text(thing.name,
+                    child: Text(widget.thing.name,
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                   Text(
-                    thing.value.toString(),
+                    widget.thing.value.toString(),
                     style: textStyle,
                   )
                 ],
@@ -77,7 +74,7 @@ class InfoScreen extends StatelessWidget {
   }
 }
 
-Widget _buildBottomRowButtons() {
+Widget buildBottomRowButtons() {
   return BottomAppBar(
     shape: CircularNotchedRectangle(),
     notchMargin: 4.0,
@@ -95,19 +92,19 @@ Widget _buildBottomRowButtons() {
 }
 
 //TODO make an edit page
-_pushThingsEdit(BuildContext context, ThingsItem thing) async{
-  final result = await Navigator.push(
+_pushThingsEdit(BuildContext context, ThingsItem thing){
+  final result =  Navigator.push(
     context,
     EditPageRoute(builder: (context) => EditScreen(thing: thing)),
   );
 }
 
-_deleteThing(ThingsItem T) {
+deleteThing(ThingsItem T) {
   DatabaseHelper helper = DatabaseHelper.instance;
   helper.delete(T);
 }
 
-_showDeleteDialog(BuildContext context, ThingsItem thing) {
+showDeleteDialog(BuildContext context, ThingsItem thing) {
   showDialog(
       context: context,
       barrierDismissible: false,
@@ -131,7 +128,7 @@ _showDeleteDialog(BuildContext context, ThingsItem thing) {
             FlatButton(
               child: Text("Delete"),
               onPressed: () {
-                _deleteThing(thing);
+                deleteThing(thing);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop("Deleted");
               },
@@ -139,6 +136,13 @@ _showDeleteDialog(BuildContext context, ThingsItem thing) {
           ],
         );
       });
+}
+class InfoScreen extends StatefulWidget{
+  InfoScreen({Key key, @required this.thing}) : super(key: key);
+
+  final ThingsItem thing;
+  @override
+  InfoScreenState createState() => InfoScreenState();
 }
 
 //placeholder function for non implemented buttons
