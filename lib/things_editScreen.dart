@@ -18,22 +18,47 @@ class EditScreenState extends State<EditScreen> {
   final editItemValueController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    editItemNameController.text = widget.thing.name;
+    editItemValueController.text = widget.thing.value.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement safe area, image etc.
     return Scaffold(
-      body: SafeArea(
-          child: Column(
-        children: [buildTopRowButtons(context), buildThingsInfoHeader()],
-      )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDeleteDialog(context, widget.thing);
-        },
-        child: Icon(Icons.delete_outline),
-      ),
-      bottomNavigationBar: _buildBottomRowButtons(),
-    );
+        body: SafeArea(
+            child: Column(
+          children: [buildTopRowButtons(context), buildThingsInfoHeader()],
+        )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showDeleteDialog(context, widget.thing);
+          },
+          child: Icon(Icons.delete_outline),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          notchMargin: 4.0,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () async {
+                  widget.thing.quickEdit(
+                      name: editItemNameController.text,
+                      value: double.tryParse(editItemValueController.text));
+                  await DatabaseHelper.instance.update(thing: widget.thing);
+                  Navigator.of(context).pop();
+                },
+                child: Text('Save changes'),
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget buildTopRowButtons(BuildContext context) {
@@ -54,8 +79,6 @@ class EditScreenState extends State<EditScreen> {
   }
 
   Widget buildThingsInfoHeader() {
-    editItemNameController.text = widget.thing.name;
-    editItemValueController.text = widget.thing.value.toString();
     return Container(
       padding: const EdgeInsets.all(32),
       child: Form(
@@ -107,25 +130,6 @@ class EditScreenState extends State<EditScreen> {
     );
   }
 }
-
-Widget _buildBottomRowButtons() {
-  return BottomAppBar(
-    shape: CircularNotchedRectangle(),
-    notchMargin: 4.0,
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        RaisedButton(
-          onPressed: _placeholder,
-          child: Text('Save changes'),
-        ),
-      ],
-    ),
-  );
-}
-
-_placeholder() {}
 
 class EditPageRoute<T> extends MaterialPageRoute<T> {
   EditPageRoute({

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,6 +30,16 @@ class ThingsItem {
       map[columnId] = id;
     }
     return map;
+  }
+
+  void quickEdit({int id, String name, double value}) {
+    if(id != null)
+      this.id = id;
+    if(name != null)
+      this.name = name;
+    if(value != null)
+      this.value = value;
+
   }
 
   @override
@@ -111,6 +122,14 @@ class DatabaseHelper {
   void delete(ThingsItem thing) async {
     Database db = await database;
     db.delete(tableThings, where: "_id = ?", whereArgs: [thing.id]);
+  }
+
+  update({@required ThingsItem thing}) async {
+    Database db = await database;
+
+    int updateCount = await db.update(tableThings, thing.toMap(),
+        where: '$columnId = ?', whereArgs: [thing.id]);
+    return updateCount;
   }
 
 // TODO: update()
