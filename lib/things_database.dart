@@ -13,6 +13,7 @@ class ThingsItem {
   int id;
   String name;
   double value;
+  File image;
 
   ThingsItem();
 
@@ -32,14 +33,15 @@ class ThingsItem {
     return map;
   }
 
-  void quickEdit({int id, String name, double value}) {
+  void quickEdit({int id, String name, double value, File image}) {
     if(id != null)
       this.id = id;
     if(name != null)
       this.name = name;
     if(value != null)
       this.value = value;
-
+    if(image != null)
+      this.image = image;
   }
 
   @override
@@ -132,6 +134,5 @@ class DatabaseHelper {
     return updateCount;
   }
 
-// TODO: update()
 
 }

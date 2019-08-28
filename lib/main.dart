@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 
@@ -49,6 +51,7 @@ class StartUpPage extends StatefulWidget {
 }
 
 class _StartUpPageState extends State<StartUpPage> {
+  File thingImage;
   final _formKey = GlobalKey<FormState>();
 
   final addItemNameController =
@@ -62,6 +65,7 @@ class _StartUpPageState extends State<StartUpPage> {
   bool _emptyThingsList = true;
   int _selectedIndex = 0;
 
+//TODO image picker perms for IOS
   @override
   void dispose() {
     addItemNameController.dispose();
@@ -72,7 +76,6 @@ class _StartUpPageState extends State<StartUpPage> {
   //database
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _readAll();
   }
@@ -175,6 +178,22 @@ class _StartUpPageState extends State<StartUpPage> {
             ),
           ),
           Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Center(
+              //TODO ditch modal sheet, cant set state while it is shown
+              child: RaisedButton(
+                child: Text('Select image'),
+                onPressed: () async {
+                  await imageSelector();
+                  setState(() {});
+                },
+              ),
+            ),
+          ),
+          Center(
+            child: circleImage(image: thingImage),
+          ),
+          Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Center(
                 child: RaisedButton(
@@ -254,6 +273,21 @@ class _StartUpPageState extends State<StartUpPage> {
     );
   }
 
+  Widget circleImage(
+      {@required File image, double width = 50.0, double height = 50.0}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          image: new DecorationImage(
+              image: image == null
+                  ? new AssetImage('graphics/add_icon.jpg')
+                  : new FileImage(thingImage),
+              fit: BoxFit.fill)),
+    );
+  }
+
   _navigateToInfoPage(BuildContext context, ThingsItem thing) async {
     final result = await Navigator.push(
       context,
@@ -293,6 +327,39 @@ class _StartUpPageState extends State<StartUpPage> {
     }
     _possessions = tList;
     setState(() {});
+  }
+
+  imageSelector() async {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                  title: new Text('Take a picture'),
+                  leading: new Icon(Icons.camera),
+                  onTap: () async {
+                    thingImage =
+                        await ImagePicker.pickImage(source: ImageSource.camera);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Select from gallery'),
+                  leading: new Icon(Icons.image),
+                  onTap: () async {
+                    thingImage = await ImagePicker.pickImage(
+                        source: ImageSource.gallery);
+                    print(
+                        'You have selected gallery image :' + thingImage.path);
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ),
+          );
+        });
   }
 
   _placeholder() {}

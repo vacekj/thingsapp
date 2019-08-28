@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 
@@ -67,7 +68,6 @@ class EditScreenState extends State<EditScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          //TODO make a working edit page transition
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
@@ -86,8 +86,55 @@ class EditScreenState extends State<EditScreen> {
           child: Row(
             //TODO fix being unable to get a thing.value from database
             children: <Widget>[
-              Icon(Icons.picture_in_picture),
-              Text('Add'),
+              GestureDetector(
+                child: Container(
+                  width: 70.0,
+                  height: 70.0,
+                  decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: new DecorationImage(
+                          image: widget.thing.image == null
+                              ? new AssetImage('graphics/add_icon.jpg')
+                              : new FileImage(widget.thing.image),
+                          fit: BoxFit.fill)),
+                ),
+                onTap: () async {
+                  await showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return Container(
+                          child: new Wrap(
+                            children: <Widget>[
+                              new ListTile(
+                                title: new Text('Take a picture'),
+                                leading: new Icon(Icons.camera),
+                                onTap: () async {
+                                  widget.thing.image =
+                                      await ImagePicker.pickImage(
+                                          source: ImageSource.camera);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new ListTile(
+                                title: new Text('Select from gallery'),
+                                leading: new Icon(Icons.image),
+                                onTap: () async {
+                                  widget.thing.image =
+                                      await ImagePicker.pickImage(
+                                          source: ImageSource.gallery);
+                                  print('You have selected gallery image :' +
+                                      widget.thing.image.path);
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          ),
+                        );
+                      });
+                  setState(() {});
+                  print('you pressed da button');
+                },
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

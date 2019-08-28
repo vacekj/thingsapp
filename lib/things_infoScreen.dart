@@ -33,7 +33,6 @@ class InfoScreenState extends State<InfoScreen>{
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           IconButton(icon: Icon(Icons.edit), onPressed: (){_pushThingsEdit(context, widget.thing);}),
-          //TODO make a working edit page transition
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
@@ -50,8 +49,16 @@ class InfoScreenState extends State<InfoScreen>{
         child: Row(
           //TODO fix being unable to get a thing.value from database
           children: <Widget>[
-            Icon(Icons.picture_in_picture),
-            Text('Add'),
+          Container(
+          width: 70.0,
+          height: 70.0,
+          decoration: new BoxDecoration(
+              shape: BoxShape.circle,
+              image: new DecorationImage(
+                  image: widget.thing.image == null
+                      ? new AssetImage('graphics/add_icon.jpg')
+                      : new FileImage(widget.thing.image),
+                  fit: BoxFit.fill)),),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,7 +98,6 @@ Widget buildBottomRowButtons() {
   );
 }
 
-//TODO make an edit page
 _pushThingsEdit(BuildContext context, ThingsItem thing){
   final result =  Navigator.push(
     context,
