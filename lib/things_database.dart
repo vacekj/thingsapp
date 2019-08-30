@@ -8,6 +8,7 @@ final String tableThings = 'things';
 final String columnId = '_id';
 final String columnName = 'name';
 final String columnValue = 'value';
+final String columnFilePath = 'path';
 
 class ThingsItem {
   int id;
@@ -22,11 +23,16 @@ class ThingsItem {
     this.id = map[columnId];
     this.name = map[columnName];
     this.value = map[columnValue];
+    this.image = File(map[columnFilePath]);
   }
 
   //convenience method to create a Map from this object
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{columnName: name, columnValue: value};
+    var map = <String, dynamic>{
+      columnName: name,
+      columnValue: value,
+      columnFilePath: image.path
+    };
     if (id != null) {
       map[columnId] = id;
     }
@@ -34,14 +40,10 @@ class ThingsItem {
   }
 
   void quickEdit({int id, String name, double value, File image}) {
-    if(id != null)
-      this.id = id;
-    if(name != null)
-      this.name = name;
-    if(value != null)
-      this.value = value;
-    if(image != null)
-      this.image = image;
+    if (id != null) this.id = id;
+    if (name != null) this.name = name;
+    if (value != null) this.value = value;
+    if (image != null) this.image = image;
   }
 
   @override
@@ -84,7 +86,8 @@ class DatabaseHelper {
       CREATE TABLE $tableThings (
         $columnId INTEGER PRIMARY KEY,
         $columnName TEXT NOT NULL,
-        $columnValue REAL NOT NULL
+        $columnValue REAL NOT NULL,
+        $columnFilePath TEXT
       )
     ''');
   }
@@ -99,7 +102,7 @@ class DatabaseHelper {
   Future<ThingsItem> queryThing(int id) async {
     Database db = await database;
     List<Map> maps = await db.query(tableThings,
-        columns: [columnId, columnName, columnValue],
+        columns: [columnId, columnName, columnValue, columnFilePath],
         where: '$columnId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
@@ -110,8 +113,8 @@ class DatabaseHelper {
 
   Future<List<ThingsItem>> queryAllThings() async {
     Database db = await database;
-    List<Map<String, dynamic>> maps = await db
-        .query(tableThings, columns: [columnId, columnName, columnName]);
+    List<Map<String, dynamic>> maps = await db.query(tableThings,
+        columns: [columnId, columnName, columnName, columnFilePath]);
     List<ThingsItem> list = <ThingsItem>[];
     try {
       maps.forEach((element) => list.add(ThingsItem.fromMap(element)));
@@ -133,6 +136,4 @@ class DatabaseHelper {
         where: '$columnId = ?', whereArgs: [thing.id]);
     return updateCount;
   }
-
-
 }

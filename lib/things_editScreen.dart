@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as prefix0;
+import 'package:path_provider/path_provider.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 
@@ -119,9 +122,14 @@ class EditScreenState extends State<EditScreen> {
                                 title: new Text('Select from gallery'),
                                 leading: new Icon(Icons.image),
                                 onTap: () async {
-                                  widget.thing.image =
+                                  File image =
                                       await ImagePicker.pickImage(
                                           source: ImageSource.gallery);
+                                  if (image==null)return;
+                                  Directory appDocDir = await getApplicationDocumentsDirectory();
+                                  String appDocDirPath = appDocDir.path;
+                                  var fileName = prefix0.basename(image.path);
+                                  widget.thing.image = await image.copy('$appDocDirPath/$fileName');
                                   print('You have selected gallery image :' +
                                       widget.thing.image.path);
                                   Navigator.of(context).pop();

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 
@@ -197,7 +198,10 @@ class _StartUpPageState extends State<StartUpPage> {
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Center(
                 child: RaisedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    Directory appDocDir =
+                        await getApplicationDocumentsDirectory();
+                    String appDocDirPath = appDocDir.path;
                     if (_formKey.currentState.validate()) {
                       //_read();
                       if (_emptyThingsList && _possessions.length == 1) {
@@ -209,6 +213,10 @@ class _StartUpPageState extends State<StartUpPage> {
                         T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
+
+                        T.image = thingImage == null
+                            ? null
+                            : await thingImage.copy('$appDocDirPath/$T.id');
                         //_possessions.add(T);
                         _save(T);
                         _emptyThingsList = false;
@@ -221,6 +229,9 @@ class _StartUpPageState extends State<StartUpPage> {
                         T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
+                        T.image = thingImage == null
+                            ? null
+                            : await thingImage.copy('$appDocDirPath/$T.id');
                         //_possessions.add(T);
                         _save(T);
                         _readAll();
@@ -240,7 +251,7 @@ class _StartUpPageState extends State<StartUpPage> {
   void _pushThingsAdd() {
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext bc) {
+        builder: (context) {
           return Container(
             child: new Wrap(
               children: <Widget>[
