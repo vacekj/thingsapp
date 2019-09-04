@@ -31,7 +31,7 @@ class ThingsItem {
     var map = <String, dynamic>{
       columnName: name,
       columnValue: value,
-      columnFilePath: image.path
+      columnFilePath: image == null ? null : image.path,
     };
     if (id != null) {
       map[columnId] = id;
