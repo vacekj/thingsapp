@@ -23,7 +23,7 @@ class ThingsItem {
     this.id = map[columnId];
     this.name = map[columnName];
     this.value = map[columnValue];
-    this.image = File(map[columnFilePath]);
+    this.image = map[columnFilePath] == null ? null : File(map[columnFilePath]);
   }
 
   //convenience method to create a Map from this object
