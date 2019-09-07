@@ -136,4 +136,9 @@ class DatabaseHelper {
         where: '$columnId = ?', whereArgs: [thing.id]);
     return updateCount;
   }
+  Future<int> countEntries() async {
+    Database db = await database;
+    int count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $tableThings'));
+    return count;
+  }
 }

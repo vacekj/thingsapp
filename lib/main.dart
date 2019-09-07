@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
+import 'package:things_app/things_listView.dart';
 
 void main() => runApp(MyApp());
 
@@ -103,7 +104,7 @@ class _StartUpPageState extends State<StartUpPage> {
         ],
       ),
       bottomNavigationBar: _bottomBar(),
-      body: _buildThingsList(),
+      body: ThingsListView(possessions: _possessions),
     );
   }
 
@@ -210,7 +211,7 @@ class _StartUpPageState extends State<StartUpPage> {
                         print(
                             'Adding new thing to possessions; printing possessions length');
                         print(_possessions.length);
-                        T.id = _possessions.length;
+                        //T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
 
@@ -226,7 +227,7 @@ class _StartUpPageState extends State<StartUpPage> {
                         print(
                             'Adding new thing to possessions; printing possessions length');
                         print(_possessions.length);
-                        T.id = _possessions.length;
+                        //T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
                         T.image = thingImage == null
