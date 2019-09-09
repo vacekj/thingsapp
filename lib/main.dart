@@ -8,6 +8,9 @@ import 'package:things_app/things_listView.dart';
 
 void main() => runApp(MyApp());
 
+ List<ThingsItem> possessions = <ThingsItem>[];
+
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -60,7 +63,7 @@ class _StartUpPageState extends State<StartUpPage> {
       TextEditingController(); //Used to retrieve user data from text fields
   final addItemValueController = TextEditingController();
 
-  List<ThingsItem> _possessions = <ThingsItem>[];
+  //List<ThingsItem> possessions = <ThingsItem>[];
 
   final TextStyle _fontSize = const TextStyle(fontSize: 20.0);
 
@@ -79,7 +82,7 @@ class _StartUpPageState extends State<StartUpPage> {
   @override
   void initState() {
     super.initState();
-    _readAll();
+    readAll();
   }
 
   @override
@@ -104,43 +107,10 @@ class _StartUpPageState extends State<StartUpPage> {
         ],
       ),
       bottomNavigationBar: _bottomBar(),
-      body: ThingsListView(possessions: _possessions),
+      body: ThingsListView(),
     );
   }
 
-  Widget _buildThingsList() {
-    if (_possessions.isEmpty && _emptyThingsList) {
-      ThingsItem T = new ThingsItem();
-      T.id = -1;
-      T.name = 'Your list is empty! Try adding something.';
-      T.value = 0;
-      print("Pre add:");
-      _possessions.forEach((element) => print(element));
-      _possessions.add(T);
-      print("post add:");
-      _possessions.forEach((element) => print(element));
-    }
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: _possessions.length * 2 - 1,
-        itemBuilder: (context, index) {
-          if (index.isOdd) return Divider();
-
-          return _buildRow(_possessions[(index + 1) ~/ 2]);
-        });
-  }
-
-  Widget _buildRow(ThingsItem thing) {
-    return ListTile(
-        title: Text(
-          thing.name,
-          style: _fontSize,
-        ),
-        onTap: () {
-          _navigateToInfoPage(context, thing);
-          //onTap: ,
-        });
-  }
 
   Widget _buildForm() {
     return Form(
@@ -205,12 +175,12 @@ class _StartUpPageState extends State<StartUpPage> {
                     String appDocDirPath = appDocDir.path;
                     if (_formKey.currentState.validate()) {
                       //_read();
-                      if (_emptyThingsList && _possessions.length == 1) {
-                        _possessions.clear();
+                      if (_emptyThingsList && possessions.length == 1) {
+                        possessions.clear();
                         ThingsItem T = new ThingsItem();
                         print(
                             'Adding new thing to possessions; printing possessions length');
-                        print(_possessions.length);
+                        print(possessions.length);
                         //T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
@@ -221,12 +191,12 @@ class _StartUpPageState extends State<StartUpPage> {
                         //_possessions.add(T);
                         _save(T);
                         _emptyThingsList = false;
-                        _readAll();
+                        readAll();
                       } else {
                         ThingsItem T = new ThingsItem();
                         print(
                             'Adding new thing to possessions; printing possessions length');
-                        print(_possessions.length);
+                        print(possessions.length);
                         //T.id = _possessions.length;
                         T.name = addItemNameController.text;
                         T.value = double.parse(addItemValueController.text);
@@ -235,7 +205,7 @@ class _StartUpPageState extends State<StartUpPage> {
                             : await thingImage.copy('$appDocDirPath/$T.id');
                         //_possessions.add(T);
                         _save(T);
-                        _readAll();
+                        readAll();
                       }
                       Navigator.of(context).pop();
                       setState(() {});
@@ -300,13 +270,13 @@ class _StartUpPageState extends State<StartUpPage> {
     );
   }
 
-  _navigateToInfoPage(BuildContext context, ThingsItem thing) async {
+  navigateToInfoPage(BuildContext context, ThingsItem thing) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => InfoScreen(thing: thing)),
     );
     if (result == "Deleted") {
-      _readAll();
+      readAll();
     }
   }
 
@@ -327,7 +297,7 @@ class _StartUpPageState extends State<StartUpPage> {
     print('inserted row: $id');
   }
 
-  _readAll() async {
+  readAll() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     List<ThingsItem> tList = await helper.queryAllThings();
     if (tList == null) {
@@ -337,7 +307,7 @@ class _StartUpPageState extends State<StartUpPage> {
     } else {
       tList.forEach((element) => print(element));
     }
-    _possessions = tList;
+    possessions = tList;
     setState(() {});
   }
 
