@@ -114,7 +114,7 @@ class DatabaseHelper {
   Future<List<ThingsItem>> queryAllThings() async {
     Database db = await database;
     List<Map<String, dynamic>> maps = await db.query(tableThings,
-        columns: [columnId, columnName, columnName, columnFilePath]);
+        columns: [columnId, columnName, columnValue, columnFilePath]);
     List<ThingsItem> list = <ThingsItem>[];
     try {
       maps.forEach((element) => list.add(ThingsItem.fromMap(element)));

@@ -8,8 +8,7 @@ import 'package:things_app/things_listView.dart';
 
 void main() => runApp(MyApp());
 
- List<ThingsItem> possessions = <ThingsItem>[];
-
+List<ThingsItem> possessions = <ThingsItem>[];
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -110,7 +109,6 @@ class _StartUpPageState extends State<StartUpPage> {
       body: ThingsListView(),
     );
   }
-
 
   Widget _buildForm() {
     return Form(
