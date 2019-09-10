@@ -270,15 +270,25 @@ class _StartUpPageState extends State<StartUpPage> {
   }
 
   Widget _bottomBar() {
-    return BottomNavigationBar(
-      currentIndex: 1,
-      elevation: 50.0,
-      items: [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard), title: Text("Dashboard")),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.format_list_bulleted), title: Text("List")),
-      ],
+    return BottomAppBar(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: IconButton(
+              icon: Image.asset('assets/graphics/dashboard-icon.png'),
+              onPressed: () {},
+            ),
+          ),
+          Expanded(
+            child: IconButton(
+              icon: Image.asset('assets/graphics/list-icon.png'),
+              onPressed: () {},
+            ),
+          )
+        ],
+      ),
     );
   }
 
