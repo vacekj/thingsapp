@@ -48,7 +48,7 @@ class _ThingsListViewState extends State<ThingsListView> {
           shape: BoxShape.rectangle,
           image: new DecorationImage(
               image: image == null
-                  ? new AssetImage('assets/graphics/add_icon.jpg')
+                  ? new AssetImage('assets/graphics/no-photo.png')
                   : new FileImage(image),
               fit: BoxFit.fill)),
     );

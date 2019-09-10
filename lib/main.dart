@@ -269,7 +269,7 @@ class _StartUpPageState extends State<StartUpPage> {
           shape: BoxShape.circle,
           image: new DecorationImage(
               image: image == null
-                  ? new AssetImage('assets/graphics/add_icon.jpg')
+                  ? new AssetImage('assets/graphics/no-photo.png')
                   : new FileImage(thingImage),
               fit: BoxFit.fill)),
     );

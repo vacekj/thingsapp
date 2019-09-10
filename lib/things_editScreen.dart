@@ -97,7 +97,7 @@ class EditScreenState extends State<EditScreen> {
                       shape: BoxShape.circle,
                       image: new DecorationImage(
                           image: widget.thing.image == null
-                              ? new AssetImage('assets/graphics/add_icon.jpg')
+                              ? new AssetImage('assets/graphics/no-photo.png')
                               : new FileImage(widget.thing.image),
                           fit: BoxFit.fill)),
                 ),
