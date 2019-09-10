@@ -10,6 +10,7 @@ import 'package:things_app/things_listView.dart';
 void main() => runApp(MyApp());
 
 List<ThingsItem> possessions = <ThingsItem>[];
+int selectedScreen = 1;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -71,12 +72,7 @@ class _StartUpPageState extends State<StartUpPage> {
       TextEditingController(); //Used to retrieve user data from text fields
   final addItemValueController = TextEditingController();
 
-  //List<ThingsItem> possessions = <ThingsItem>[];
-
-  final TextStyle _fontSize = const TextStyle(fontSize: 20.0);
-
   bool _emptyThingsList = true;
-  int _selectedIndex = 0;
 
 //TODO image picker perms for IOS
   @override
@@ -279,14 +275,30 @@ class _StartUpPageState extends State<StartUpPage> {
         children: <Widget>[
           Expanded(
             child: IconButton(
-              icon: Image.asset('assets/graphics/dashboard-icon.png'),
-              onPressed: () {},
+              icon: selectedScreen == 1
+                  ? Image.asset('assets/graphics/dashboard-faded-icon.png')
+                  : Image.asset('assets/graphics/dashboard-icon.png'),
+              onPressed: () {
+                if (selectedScreen == 1) {
+                  setState(() {
+                    selectedScreen = 0;
+                  });
+                }
+              },
             ),
           ),
           Expanded(
             child: IconButton(
-              icon: Image.asset('assets/graphics/list-icon.png'),
-              onPressed: () {},
+              icon: selectedScreen == 1
+                  ? Image.asset('assets/graphics/list-icon.png')
+                  : Image.asset('assets/graphics/list-faded-icon.png'),
+              onPressed: () {
+                if (selectedScreen == 0) {
+                  setState(() {
+                    selectedScreen = 1;
+                  });
+                }
+              },
             ),
           )
         ],

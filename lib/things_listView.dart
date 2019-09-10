@@ -25,7 +25,10 @@ class _ThingsListViewState extends State<ThingsListView> {
   Widget _thingListItem(ThingsItem thing) {
     return ListTile(
         title: Text(thing.name),
-        subtitle: Text(thing.value.toString()),
+        subtitle: Text(
+          thing.value.round().toString(),
+          style: TextStyle(color: Color(0xFF007030)),
+        ),
         leading: thingListImage(image: thing.image),
         onTap: () {
           navigateToInfoPage(context, thing);
@@ -44,7 +47,7 @@ class _ThingsListViewState extends State<ThingsListView> {
       width: width,
       height: height,
       decoration: new BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: BorderRadius.circular(7.14),
           shape: BoxShape.rectangle,
           image: new DecorationImage(
               image: image == null
@@ -60,7 +63,7 @@ class _ThingsListViewState extends State<ThingsListView> {
       MaterialPageRoute(builder: (context) => InfoScreen(thing: thing)),
     );
     if (result == "Deleted") {
-      //readAll();
+      readAll();
     }
   }
 
