@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:things_app/things_database.dart';
@@ -12,13 +13,16 @@ List<ThingsItem> possessions = <ThingsItem>[];
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,]);
     return MaterialApp(
       title: 'DClutter',
       theme: ThemeData(
-        primaryColor: Color(0xFF253336),
+        primaryColor: Color(0xFFFFFFFF),
         primaryTextTheme: TextTheme(title: TextStyle(color: Color(0xFFC2DFE3))),
+        fontFamily: 'Rubik',
 
         // This is the theme of your application.
         //
@@ -94,6 +98,7 @@ class _StartUpPageState extends State<StartUpPage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         leading:
             IconButton(icon: Icon(Icons.settings), onPressed: _placeholder),
         // Here we take the value from the StartUpPage object that was created by
@@ -111,6 +116,7 @@ class _StartUpPageState extends State<StartUpPage> {
   }
 
   Widget _buildForm() {
+    //TODO add input types and validation, remake form into a page
     return Form(
       key: _formKey,
       child: Column(
@@ -244,6 +250,7 @@ class _StartUpPageState extends State<StartUpPage> {
   Widget _bottomBar() {
     return BottomNavigationBar(
       currentIndex: 1,
+      elevation: 50.0,
       items: [
         BottomNavigationBarItem(
             icon: Icon(Icons.dashboard), title: Text("Dashboard")),
@@ -262,7 +269,7 @@ class _StartUpPageState extends State<StartUpPage> {
           shape: BoxShape.circle,
           image: new DecorationImage(
               image: image == null
-                  ? new AssetImage('graphics/add_icon.jpg')
+                  ? new AssetImage('assets/graphics/add_icon.jpg')
                   : new FileImage(thingImage),
               fit: BoxFit.fill)),
     );
