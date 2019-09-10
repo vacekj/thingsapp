@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xFFFFFFFF),
         accentColor: Color(0xFFF99073),
+
         primaryTextTheme: TextTheme(title: TextStyle(color: Color(0xFFC2DFE3))),
         fontFamily: 'Rubik',
 
@@ -101,6 +102,7 @@ class _StartUpPageState extends State<StartUpPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: Color(0xFFFFFFFF),
       appBar: AppBar(
         elevation: 0.0,
         leading: Padding(
