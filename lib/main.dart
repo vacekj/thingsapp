@@ -16,11 +16,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'DClutter',
       theme: ThemeData(
         primaryColor: Color(0xFFFFFFFF),
+        accentColor: Color(0xFFF99073),
         primaryTextTheme: TextTheme(title: TextStyle(color: Color(0xFFC2DFE3))),
         fontFamily: 'Rubik',
 
@@ -99,15 +103,33 @@ class _StartUpPageState extends State<StartUpPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        leading:
-            IconButton(icon: Icon(Icons.settings), onPressed: _placeholder),
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
+          child: IconButton(
+            icon: Image.asset('assets/graphics/settings-icon.png'),
+            onPressed: () {},
+          ),
+        ),
         // Here we take the value from the StartUpPage object that was created by
         // the App.build method, and use it to set our appbar title.
         iconTheme: IconThemeData(color: Color(0xFFC2DFE3)),
-        title: Text(widget.title),
+        title: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/graphics/logo.png'))),
+          ),
+        ),
         centerTitle: true,
+
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.add), onPressed: _pushThingsAdd)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+            child: IconButton(
+                icon: Image.asset('assets/graphics/plus-icon.png'),
+                onPressed: _pushThingsAdd),
+          )
         ],
       ),
       bottomNavigationBar: _bottomBar(),
