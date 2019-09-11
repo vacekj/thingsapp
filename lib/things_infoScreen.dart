@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_editScreen.dart';
+import 'package:things_app/things_helperClass.dart';
 
-class InfoScreenState extends State<InfoScreen>{
+class InfoScreenState extends State<InfoScreen> {
   final TextStyle textStyle = const TextStyle(fontSize: 20.0);
-
 
   @override
   Widget build(BuildContext context) {
@@ -14,30 +14,45 @@ class InfoScreenState extends State<InfoScreen>{
           child: Column(
         children: [buildTopRowButtons(context), buildThingsInfoHeader()],
       )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDeleteDialog(context, widget.thing);
-
-        },
-        child: Icon(Icons.delete_outline),
-      ),
-      bottomNavigationBar: buildBottomRowButtons(),
     );
   }
 
   Widget buildTopRowButtons(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          IconButton(icon: Icon(Icons.edit), onPressed: (){_pushThingsEdit(context, widget.thing);}),
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                Navigator.pop(context);
-              })
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+                    child: IconButton(
+                        icon: ThingsSpecialsMethods.thingsIcon('assets/graphics/pen-icon.png'),
+                        onPressed: () {
+                          _pushThingsEdit(context, widget.thing);
+                        }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+                    child: IconButton(
+                        icon: ThingsSpecialsMethods.thingsIcon('assets/graphics/trash-icon.png'),
+                        onPressed: () {
+                          showDeleteDialog(context, widget.thing);
+                        }),
+                  ),
+                ],
+                
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+            child: IconButton(
+                icon: ThingsSpecialsMethods.thingsIcon('assets/graphics/down-arrow.png', height: 15),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          )
         ],
       ),
     );
@@ -49,16 +64,17 @@ class InfoScreenState extends State<InfoScreen>{
         child: Row(
           //TODO fix being unable to get a thing.value from database
           children: <Widget>[
-          Container(
-          width: 70.0,
-          height: 70.0,
-          decoration: new BoxDecoration(
-              shape: BoxShape.circle,
-              image: new DecorationImage(
-                  image: widget.thing.image == null
-                      ? new AssetImage('assets/graphics/no-photo.png')
-                      : new FileImage(widget.thing.image),
-                  fit: BoxFit.fill)),),
+            Container(
+              width: 70.0,
+              height: 70.0,
+              decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                      image: widget.thing.image == null
+                          ? new AssetImage('assets/graphics/no-photo.png')
+                          : new FileImage(widget.thing.image),
+                      fit: BoxFit.fill)),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,25 +97,8 @@ class InfoScreenState extends State<InfoScreen>{
   }
 }
 
-Widget buildBottomRowButtons() {
-  return BottomAppBar(
-    shape: CircularNotchedRectangle(),
-    notchMargin: 4.0,
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        RaisedButton(
-          onPressed: _placeholder,
-          child: Text('Sell'),
-        ),
-      ],
-    ),
-  );
-}
-
-_pushThingsEdit(BuildContext context, ThingsItem thing){
-  final result =  Navigator.push(
+_pushThingsEdit(BuildContext context, ThingsItem thing) {
+  final result = Navigator.push(
     context,
     EditPageRoute(builder: (context) => EditScreen(thing: thing)),
   );
@@ -143,10 +142,12 @@ showDeleteDialog(BuildContext context, ThingsItem thing) {
         );
       });
 }
-class InfoScreen extends StatefulWidget{
+
+class InfoScreen extends StatefulWidget {
   InfoScreen({Key key, @required this.thing}) : super(key: key);
 
   final ThingsItem thing;
+
   @override
   InfoScreenState createState() => InfoScreenState();
 }
