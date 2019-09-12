@@ -1,8 +1,9 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:things_app/main.dart' as main;
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
+import 'package:things_app/dflutter.dart';
 
 class ThingsListView extends StatefulWidget {
   ThingsListView({Key key}) : super(key: key);
@@ -29,7 +30,7 @@ class _ThingsListViewState extends State<ThingsListView> {
           thing.value.round().toString(),
           style: TextStyle(color: Color(0xFF007030)),
         ),
-        leading: thingListImage(image: thing.image),
+        leading: DFlutter.thingListImage(image: thing.image),
         onTap: () {
           navigateToInfoPage(context, thing);
         });
@@ -41,21 +42,7 @@ class _ThingsListViewState extends State<ThingsListView> {
     );
   }
 
-  Widget thingListImage(
-      {@required File image, double width = 50.0, double height = 50.0}) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: new BoxDecoration(
-          borderRadius: BorderRadius.circular(7.14),
-          shape: BoxShape.rectangle,
-          image: new DecorationImage(
-              image: image == null
-                  ? new AssetImage('assets/graphics/no-photo.png')
-                  : new FileImage(image),
-              fit: BoxFit.fill)),
-    );
-  }
+
 
   navigateToInfoPage(BuildContext context, ThingsItem thing) async {
     final result = await Navigator.push(

@@ -5,6 +5,7 @@ import 'package:path/path.dart' as prefix0;
 import 'package:path_provider/path_provider.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
+import 'package:things_app/dflutter.dart';
 
 class EditScreen extends StatefulWidget {
   final ThingsItem thing;
@@ -32,50 +33,69 @@ class EditScreenState extends State<EditScreen> {
   Widget build(BuildContext context) {
     // TODO: implement safe area, image etc.
     return Scaffold(
-        body: SafeArea(
-            child: Column(
-          children: [buildTopRowButtons(context), buildThingsInfoHeader()],
-        )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDeleteDialog(context, widget.thing);
-          },
-          child: Icon(Icons.delete_outline),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 4.0,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              RaisedButton(
-                onPressed: () async {
-                  widget.thing.quickEdit(
-                      name: editItemNameController.text,
-                      value: double.tryParse(editItemValueController.text));
-                  await DatabaseHelper.instance.update(thing: widget.thing);
-                  Navigator.of(context).pop();
-                },
-                child: Text('Save changes'),
-              ),
-            ],
-          ),
-        ));
+      body: SafeArea(
+          child: Column(
+        children: [buildTopRowButtons(context), buildThingsInfoHeader()],
+      )),
+    );
+  }
+
+  saveThing() async {
+    widget.thing.quickEdit(
+        name: editItemNameController.text,
+        value: double.tryParse(editItemValueController.text));
+    await DatabaseHelper.instance.update(thing: widget.thing);
+    Navigator.of(context).pop();
   }
 
   Widget buildTopRowButtons(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                Navigator.pop(context);
-              })
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 0.0),
+                  child: IconButton(
+                    icon: DFlutter.thingsIcon('assets/graphics/tick-icon.png'),
+                    onPressed: () {
+                      saveThing();
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 0.0),
+                  child: IconButton(
+                    icon: DFlutter.thingsIcon('assets/graphics/cross-icon.png'),
+                    onPressed: () {},
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 0.0),
+                  child: IconButton(
+                    icon: DFlutter.thingsIcon('assets/graphics/trash-icon.png'),
+                    onPressed: () {
+                      showDeleteDialog(context, widget.thing);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+            child: IconButton(
+                icon: DFlutter.thingsIcon('assets/graphics/down-arrow.png', height: 15),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          )
         ],
       ),
     );
@@ -90,17 +110,7 @@ class EditScreenState extends State<EditScreen> {
             //TODO fix being unable to get a thing.value from database
             children: <Widget>[
               GestureDetector(
-                child: Container(
-                  width: 70.0,
-                  height: 70.0,
-                  decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: new DecorationImage(
-                          image: widget.thing.image == null
-                              ? new AssetImage('assets/graphics/no-photo.png')
-                              : new FileImage(widget.thing.image),
-                          fit: BoxFit.fill)),
-                ),
+                child: DFlutter.thingListImage(image: widget.thing.image),
                 onTap: () async {
                   await showModalBottomSheet(
                       context: context,
@@ -122,14 +132,15 @@ class EditScreenState extends State<EditScreen> {
                                 title: new Text('Select from gallery'),
                                 leading: new Icon(Icons.image),
                                 onTap: () async {
-                                  File image =
-                                      await ImagePicker.pickImage(
-                                          source: ImageSource.gallery);
-                                  if (image==null)return;
-                                  Directory appDocDir = await getApplicationDocumentsDirectory();
+                                  File image = await ImagePicker.pickImage(
+                                      source: ImageSource.gallery);
+                                  if (image == null) return;
+                                  Directory appDocDir =
+                                      await getApplicationDocumentsDirectory();
                                   String appDocDirPath = appDocDir.path;
                                   var fileName = prefix0.basename(image.path);
-                                  widget.thing.image = await image.copy('$appDocDirPath/$fileName');
+                                  widget.thing.image = await image
+                                      .copy('$appDocDirPath/$fileName');
                                   print('You have selected gallery image :' +
                                       widget.thing.image.path);
                                   Navigator.of(context).pop();

@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:things_app/things_database.dart';
 import 'package:things_app/things_infoScreen.dart';
 import 'package:things_app/things_listView.dart';
+import 'package:things_app/things_settingsPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -105,7 +106,9 @@ class _StartUpPageState extends State<StartUpPage> {
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
           child: IconButton(
             icon: Image.asset('assets/graphics/settings-icon.png'),
-            onPressed: () {},
+            onPressed: () {
+              navigateToSettingsPage(context);
+            },
           ),
         ),
         // Here we take the value from the StartUpPage object that was created by
@@ -329,6 +332,11 @@ class _StartUpPageState extends State<StartUpPage> {
     if (result == "Deleted") {
       readAll();
     }
+  }
+
+  navigateToSettingsPage(BuildContext context) async {
+    final result = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SettingsScreen()));
   }
 
   _read() async {
