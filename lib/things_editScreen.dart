@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as prefix0;
 import 'package:path_provider/path_provider.dart';
-import 'package:things_app/things_database.dart';
-import 'package:things_app/things_infoScreen.dart';
-import 'package:things_app/dflutter.dart';
+import 'package:DClutter/things_database.dart';
+import 'package:DClutter/things_infoScreen.dart';
+import 'package:DClutter/dflutter.dart';
 
 class EditScreen extends StatefulWidget {
   final ThingsItem thing;

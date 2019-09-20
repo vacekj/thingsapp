@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:things_app/main.dart' as main;
-import 'package:things_app/things_database.dart';
-import 'package:things_app/things_infoScreen.dart';
-import 'package:things_app/dflutter.dart';
+import 'package:DClutter/main.dart' as main;
+import 'package:DClutter/things_database.dart';
+import 'package:DClutter/things_infoScreen.dart';
+import 'package:DClutter/dflutter.dart';
 
 class ThingsListView extends StatefulWidget {
   ThingsListView({Key key}) : super(key: key);

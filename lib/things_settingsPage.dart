@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:things_app/dflutter.dart';
+import 'package:DClutter/dflutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);

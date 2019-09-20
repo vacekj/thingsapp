@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:things_app/things_database.dart';
-import 'package:things_app/things_editScreen.dart';
-import 'package:things_app/dflutter.dart';
+import 'package:DClutter/things_database.dart';
+import 'package:DClutter/things_editScreen.dart';
+import 'package:DClutter/dflutter.dart';
 
 class InfoScreenState extends State<InfoScreen> {
   final TextStyle textStyle = const TextStyle(fontSize: 20.0);

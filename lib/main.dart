@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:things_app/things_database.dart';
-import 'package:things_app/things_infoScreen.dart';
-import 'package:things_app/things_listView.dart';
-import 'package:things_app/things_settingsPage.dart';
+import 'package:DClutter/things_database.dart';
+import 'package:DClutter/things_infoScreen.dart';
+import 'package:DClutter/things_listView.dart';
+import 'package:DClutter/things_settingsPage.dart';
 
 void main() => runApp(MyApp());
 
