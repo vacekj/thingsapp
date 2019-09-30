@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as prefix0;
 import 'package:path_provider/path_provider.dart';
 import 'package:DClutter/things_database.dart';
-import 'package:DClutter/things_infoScreen.dart';
 import 'package:DClutter/dflutter.dart';
 
 class EditScreen extends StatefulWidget {
@@ -75,16 +74,7 @@ class EditScreenState extends State<EditScreen> {
                     onPressed: () {},
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 0.0),
-                  child: IconButton(
-                    icon: DFlutter.thingsIcon('assets/graphics/trash-icon.png'),
-                    onPressed: () {
-                      showDeleteDialog(context, widget.thing);
-                    },
-                  ),
-                ),
+
               ],
             ),
           ),
