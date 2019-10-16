@@ -68,7 +68,7 @@ class InfoScreenState extends State<InfoScreen> {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: <Widget>[
-            DFlutter.thingListImage(
+            DFlutter.thingsListImage(
               image: widget.thing.image,
               width: 150,
             ),

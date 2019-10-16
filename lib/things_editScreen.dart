@@ -74,14 +74,24 @@ class EditScreenState extends State<EditScreen> {
                     onPressed: () {},
                   ),
                 ),
-
               ],
+            ),
+          ),
+          //TODO center the text
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+            child: Center(
+              child: const Text(
+                'Edit Item',
+                style: TextStyle(fontSize: 20.0),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
             child: IconButton(
-                icon: DFlutter.thingsIcon('assets/graphics/down-arrow.png', height: 15),
+                icon: DFlutter.thingsIcon('assets/graphics/down-arrow.png',
+                    height: 15),
                 onPressed: () {
                   Navigator.pop(context);
                 }),
@@ -100,7 +110,7 @@ class EditScreenState extends State<EditScreen> {
             //TODO fix being unable to get a thing.value from database
             children: <Widget>[
               GestureDetector(
-                child: DFlutter.thingListImage(image: widget.thing.image),
+                child: DFlutter.thingsListImage(image: widget.thing.image),
                 onTap: () async {
                   await showModalBottomSheet(
                       context: context,

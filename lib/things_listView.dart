@@ -30,7 +30,7 @@ class _ThingsListViewState extends State<ThingsListView> {
           thing.value.round().toString(),
           style: TextStyle(color: Color(0xFF007030)),
         ),
-        leading: DFlutter.thingListImage(image: thing.image),
+        leading: DFlutter.thingsListImage(image: thing.image),
         onTap: () {
           navigateToInfoPage(context, thing);
         });

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:DClutter/things_addScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,7 +71,7 @@ class _StartUpPageState extends State<StartUpPage> {
   final _formKey = GlobalKey<FormState>();
 
   final addItemNameController =
-      TextEditingController(); //Used to retrieve user data from text fields
+  TextEditingController(); //Used to retrieve user data from text fields
   final addItemValueController = TextEditingController();
 
   bool _emptyThingsList = true;
@@ -107,7 +108,8 @@ class _StartUpPageState extends State<StartUpPage> {
           child: IconButton(
             icon: Image.asset('assets/graphics/settings-icon.png'),
             onPressed: () {
-              navigateToSettingsPage(context);
+              //navigateToSettingsPage(context);
+              _pushThingsAdd();
             },
           ),
         ),
@@ -129,7 +131,7 @@ class _StartUpPageState extends State<StartUpPage> {
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
             child: IconButton(
                 icon: Image.asset('assets/graphics/plus-icon.png'),
-                onPressed: _pushThingsAdd),
+                onPressed: (){navigateToAddPage(context);}),
           )
         ],
       ),
@@ -198,7 +200,7 @@ class _StartUpPageState extends State<StartUpPage> {
                 child: RaisedButton(
                   onPressed: () async {
                     Directory appDocDir =
-                        await getApplicationDocumentsDirectory();
+                    await getApplicationDocumentsDirectory();
                     String appDocDirPath = appDocDir.path;
                     if (_formKey.currentState.validate()) {
                       //_read();
@@ -339,6 +341,11 @@ class _StartUpPageState extends State<StartUpPage> {
         context, MaterialPageRoute(builder: (context) => SettingsScreen()));
   }
 
+  navigateToAddPage(BuildContext context) async {
+    final result = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AddScreen()));
+  }
+
   _read() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     int rowId = 1;
@@ -382,7 +389,7 @@ class _StartUpPageState extends State<StartUpPage> {
                   leading: new Icon(Icons.camera),
                   onTap: () async {
                     thingImage =
-                        await ImagePicker.pickImage(source: ImageSource.camera);
+                    await ImagePicker.pickImage(source: ImageSource.camera);
                     Navigator.of(context).pop();
                   },
                 ),
